@@ -25,18 +25,20 @@ object JsonCursor {
     }
 
     override def nextSibling(cursor: JsonCursor): Option[JsonCursor] = {
+      println("NS=======")
       if (cursor.bps(cursor.rank)) {
         @tailrec
         def go(rank: Int, depth: Int): Option[JsonCursor] = {
+          println(s"go($rank, $depth)")
           if (rank < cursor.bps.length) {
             if (cursor.bps(rank)) {
-              go(rank + 1, depth + 1)
-            } else {
-              if (depth == 1) {
+              if (depth == 0) {
                 Some(cursor.copy(rank = rank))
               } else {
-                go(rank + 1, depth - 1)
+                go(rank + 1, depth + 1)
               }
+            } else {
+              go(rank + 1, depth - 1)
             }
           } else {
             None
