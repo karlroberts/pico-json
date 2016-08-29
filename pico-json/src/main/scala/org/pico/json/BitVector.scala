@@ -3,6 +3,14 @@ package org.pico.json
 import scala.annotation.tailrec
 
 case class BitVector(array: Array[Long]) extends AnyVal {
+  override def toString: String = {
+    val result = (0 until length).map { i =>
+      if (this(i)) "1" else "0"
+    }.mkString
+
+    result
+  }
+
   def update(position: Int, value: Boolean): Unit = {
     val i = position >>> 6
     val j = position & 0x3f
@@ -45,7 +53,7 @@ case class BitVector(array: Array[Long]) extends AnyVal {
     val i = position >>> 6
     val j = position & 0x3f
 
-    (array(i) & (1 << j)) != 0
+    (array(i) & (1L << j)) != 0
   }
 
   def length: Int = array.length * 64

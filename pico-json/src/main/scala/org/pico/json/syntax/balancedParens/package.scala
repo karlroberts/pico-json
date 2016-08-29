@@ -6,9 +6,9 @@ import scala.annotation.tailrec
 
 package object balancedParens {
   implicit class BalancedParensOps[A](val self: A) extends AnyVal {
-    def firstChild(implicit ev: BalancedParens[A]): A = ev.firstChild(self)
+    def fc(implicit ev: BalancedParens[A]): A = ev.firstChild(self)
 
-    def nextSibling(implicit ev: BalancedParens[A]): A = ev.nextSibling(self)
+    def ns(implicit ev: BalancedParens[A]): A = ev.nextSibling(self)
 
     def isOpen(implicit ev: BalancedParens[A]): Boolean = ev.isOpen(self)
 

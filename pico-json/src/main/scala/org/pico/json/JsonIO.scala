@@ -3,7 +3,6 @@ package org.pico.json
 import java.io._
 
 object JsonIO {
-
   def loadJsonAsArray(file: File): Array[Byte] = {
     val is = new FileInputStream(file)
 
@@ -96,7 +95,7 @@ object JsonIO {
         ibs(position) = true
 
         bps(bpi) = false
-        bps(bpi + 1) = false
+        bps(bpi + 1) = true
         bpi += 2
       }
     })
