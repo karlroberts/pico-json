@@ -41,8 +41,11 @@ object JsonIO {
     array
   }
 
-  def loadWithIndex(file: File): JsonCursor = {
-    val text = loadJsonAsArray(file)
+  def loadWithIndex(file: File): JsonCursor = loadWithIndex(loadJsonAsArray(file))
+
+  def loadWithIndex(text: String): JsonCursor = loadWithIndex(text.getBytes("UTF-8"))
+
+  def loadWithIndex(text: Array[Byte]): JsonCursor = {
     val ibs = BitVector.ofLength(text.length)
     val bps = BitVector.ofLength(text.length * 2)
 
