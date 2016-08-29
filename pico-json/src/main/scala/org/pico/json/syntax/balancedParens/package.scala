@@ -7,5 +7,11 @@ package object balancedParens {
     def firstChild(implicit ev: BalancedParens[A]): Option[A] = ev.firstChild(self)
 
     def nextSibling(implicit ev: BalancedParens[A]): Option[A] = ev.nextSibling(self)
+
+    def isOpen(implicit ev: BalancedParens[A]): Boolean = ev.isOpen(self)
+
+    def next(implicit ev: BalancedParens[A]): Option[A] = ev.next(self)
+
+    def findClose(implicit ev: BalancedParens[A]): Option[A] = ev.findClose(self)
   }
 }
