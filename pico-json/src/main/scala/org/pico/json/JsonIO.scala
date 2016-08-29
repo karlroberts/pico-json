@@ -101,6 +101,6 @@ object JsonIO {
       }
     })
 
-    JsonCursor(text, ibs, bps, 0)
+    JsonCursor(new String(text, "UTF-8"), ibs, bps, 0)
   }
 }

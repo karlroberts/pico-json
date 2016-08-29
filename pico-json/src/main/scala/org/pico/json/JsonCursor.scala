@@ -2,75 +2,22 @@ package org.pico.json
 
 import org.pico.json.syntax.balancedParens._
 
-import scala.annotation.tailrec
-
 case class JsonCursor(
-    text: Array[Byte],
+    text: String,
     ibs: BitVector,
     bps: BitVector,
-    rank: Int)
+    rank: Int) {
+  def nav: Option[JsonCursor] = Some(this)
 
-object JsonCursor {
-  implicit val balancedParens_Cursor = new BalancedParens[JsonCursor] {
-    implicit val selfImplicit = this
+  def subtext: String = {
+    val result = for {
+      i <- ibs.select(rank / 2)
+      start <- ibs.select(i + 1)
+      c <- Option(this).findClose
+      j <- ibs.select(c.rank)
+      end = j
+    } yield text.substring(start, end)
 
-    override def firstChild(cursor: JsonCursor): Option[JsonCursor] = {
-      val rank = cursor.rank
-
-      if (cursor.bps(rank)) {
-        if (cursor.bps(rank + 1)) {
-          Some(cursor.copy(rank = rank + 1))
-        } else {
-          None
-        }
-      } else {
-        None
-      }
-    }
-
-    override def findClose(cursor: JsonCursor): Option[JsonCursor] = {
-      if (cursor.bps(cursor.rank)) {
-        @tailrec
-        def go(rank: Int, depth: Int): Option[JsonCursor] = {
-          if (rank < cursor.bps.length) {
-            if (cursor.bps(rank)) {
-              go(rank + 1, depth + 1)
-            } else {
-              if (depth == 1) {
-                Some(cursor.copy(rank = rank))
-              } else {
-                go(rank + 1, depth - 1)
-              }
-            }
-          } else {
-            None
-          }
-        }
-
-        go(cursor.rank + 1, 1)
-      } else {
-        None
-      }
-    }
-
-    override def next(cursor: JsonCursor): Option[JsonCursor] = {
-      val rank = cursor.rank + 1
-
-      if (rank < cursor.bps.length) {
-        Some(cursor.copy(rank = rank))
-      } else {
-        None
-      }
-    }
-
-    override def nextSibling(cursor: JsonCursor): Option[JsonCursor] = {
-      for {
-        c <- cursor.findClose
-        n <- c.next
-        ns <- if (n.isOpen) Some(n) else None
-      } yield ns
-    }
-
-    override def isOpen(bp: JsonCursor): Boolean = bp.bps(bp.rank)
+    result getOrElse ""
   }
 }
