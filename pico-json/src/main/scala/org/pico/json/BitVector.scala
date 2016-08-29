@@ -1,5 +1,7 @@
 package org.pico.json
 
+import scala.annotation.tailrec
+
 case class BitVector(array: Array[Long]) extends AnyVal {
   def update(position: Int, value: Boolean): Unit = {
     val i = position >>> 6
@@ -12,6 +14,31 @@ case class BitVector(array: Array[Long]) extends AnyVal {
     }
 
     ()
+  }
+
+  def select(n: Int): Option[Int] = {
+    @tailrec
+    def go(i: Int, position: Int): Int = {
+      if (position < length) {
+        if (i == 0) {
+          position
+        } else if (this(position)) {
+          go(i - 1, position + 1)
+        } else {
+          go(i, position + 1)
+        }
+      } else {
+        -1
+      }
+    }
+
+    val result = go(n, 0)
+
+    if (result != -1) {
+      Some(result)
+    } else {
+      None
+    }
   }
 
   def apply(position: Int): Boolean = {

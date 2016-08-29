@@ -55,7 +55,6 @@ object JsonCursor {
 
     override def next(cursor: JsonCursor): Option[JsonCursor] = {
       val rank = cursor.rank + 1
-      val bpLength = cursor.bps.length
 
       if (rank < cursor.bps.length) {
         Some(cursor.copy(rank = rank))

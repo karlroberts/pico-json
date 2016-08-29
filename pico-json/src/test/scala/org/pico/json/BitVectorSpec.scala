@@ -78,5 +78,13 @@ class BitVectorSpec extends Specification {
       bv(8) must_=== false
       bv(9) must_=== false
     }
+
+    "when constructing from balanced parens string" in {
+      val bv: BitVector = BitVector.fromBitString("1110100100")
+
+      bv.select(1) must_=== Some(1)
+      bv.select(2) must_=== Some(2)
+      bv.select(3) must_=== Some(3)
+    }
   }
 }
