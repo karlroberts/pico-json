@@ -70,7 +70,7 @@ package object jsonCursor {
         case Some(cursor)  =>
           cursor.subtext.dropWhile(_ == ' ').headOption match {
             case Some(c) =>
-              if ("0123456789".contains(c)) {
+              if ("+-0123456789".contains(c)) {
                 JsonCursorNumber
               } else if (c == '"') {
                 JsonCursorString
@@ -79,7 +79,7 @@ package object jsonCursor {
               } else if (c == 'f') {
                 JsonCursorBoolean
               } else if (c == 'n') {
-                JsonCursorBoolean
+                JsonCursorNull
               } else if (c == '[') {
                 JsonCursorArray
               } else if (c == '{') {
